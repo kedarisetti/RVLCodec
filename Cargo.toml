@@ -2,3 +2,18 @@
 name = "rvlcodec"
 version = "0.1.0"
 edition = "2021"
+description = "A Rust implementation of the RVL (Run-Length Variable-Length) codec for depth image compression"
+license = "MIT"
+repository = "https://github.com/yourusername/rvlcodec"
+keywords = ["compression", "depth-image", "rvl", "codec"]
+categories = ["compression", "multimedia"]
+
+[dependencies]
+pyo3 = { version = "0.22", features = ["extension-module"] }
+
+[lib]
+name = "rvlcodec"
+crate-type = ["cdylib", "rlib"]
+
+[dev-dependencies]
+criterion = "0.5"
