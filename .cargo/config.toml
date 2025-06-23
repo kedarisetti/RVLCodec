@@ -1,0 +1,43 @@
+[package]
+# When publishing to crates.io, the registry field is optional. If the
+# field is not specified, the crate will be published to the default
+# registry (crates.io).
+# registry = "https://github.com/rust-lang/crates.io-index"
+
+# The `exclude` field can be used to prevent files from being published to the
+# registry. Each entry in the `exclude` field is a glob pattern of file paths
+# relative to the package root. The pattern may use any of the glob syntax
+# supported by the `glob` crate.
+exclude = [
+    "examples/",
+    "src/test_*.py",
+    ".github/",
+    "target/",
+    "*.md",
+    "Cargo.lock",
+]
+
+# The `include` field can be used to explicitly specify which files should be
+# included when publishing to the registry. If the `include` field is not
+# specified, then the `exclude` field is used instead. The `include` field is
+# an array of glob patterns, and all files that match any of the patterns are
+# included in the published package.
+# include = [
+#     "**/*.rs",
+#     "Cargo.toml",
+# ]
+
+# The `publish` field can be used to prevent a package from being published to a
+# registry by default. The package can still be published with the `--allow-dirty`
+# flag when using `cargo publish`.
+# publish = false
+
+# The `workspace` field can be used to configure workspace-specific settings.
+# [package.workspace]
+# members = ["path/to/member1", "path/to/member2"]
+# exclude = ["path/to/excluded"]
+# default-members = ["path/to/member1", "path/to/member2"]
+# package = { version = "1.0.0", edition = "2021" }
+# dependencies = { serde = "1.0" }
+# dev-dependencies = { tokio = { version = "1.0", features = ["full"] } }
+# build-dependencies = { cc = "1.0" } 

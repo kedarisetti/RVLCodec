@@ -58,6 +58,7 @@ impl RVLCodec {
         let output_len = input.len() * 2; // Allocate enough space
         output.resize(output_len, 0);
         
+        // Set up buffer pointers like C++ code
         let output_ptr = output.as_mut_ptr() as *mut i32;
         self.p_buffer = 0;
         self.word = 0;
@@ -120,6 +121,7 @@ impl RVLCodec {
         output.clear();
         output.resize(num_pixels, 0);
         
+        // Set up buffer pointers like C++ code
         let input_ptr = input.as_ptr() as *const i32;
         self.p_buffer = 0;
         self.word = 0;

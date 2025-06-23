@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 0.1.0)'
+        required: true
+        type: string
+      release_notes:
+        description: 'Release notes'
+        required: false
+        type: string
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          release_name: Release v${{ github.event.inputs.version }}
+          body: |
+            ## What's Changed
+            
+            ${{ github.event.inputs.release_notes }}
+            
+            ## Installation
+            
+            ### Rust
+            ```toml
+            [dependencies]
+            rvlcodec = "${{ github.event.inputs.version }}"
+            ```
+            
+            ### Python
+            ```bash
+            pip install rvlcodec==${{ github.event.inputs.version }}
+            ```
+          draft: false
+          prerelease: false 

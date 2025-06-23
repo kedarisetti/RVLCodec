@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 description = "A Rust implementation of the RVL (Run-Length Variable-Length) codec for depth image compression"
 license = "MIT"
-repository = "https://github.com/yourusername/rvlcodec"
+repository = "https://github.com/kedarisetti/rvlcodec"
 keywords = ["compression", "depth-image", "rvl", "codec"]
 categories = ["compression", "multimedia"]
 

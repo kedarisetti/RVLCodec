@@ -25,6 +25,13 @@ Add to your `Cargo.toml`:
 rvlcodec = "0.1.0"
 ```
 
+Or from GitHub:
+
+```toml
+[dependencies]
+rvlcodec = { git = "https://github.com/kedarisetti/rvlcodec" }
+```
+
 ### Python Bindings (Optional)
 
 #### Prerequisites
