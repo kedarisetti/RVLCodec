@@ -135,6 +135,7 @@ impl RVLCodec {
         output: &mut Vec<u16>,
         num_pixels: usize,
     ) -> Result<(), RvlError> {
+        #[allow(unknown_lints, clippy::manual_is_multiple_of)]
         if input.len() % 4 != 0 {
             return Err(RvlError::InvalidInputLength);
         }
@@ -317,9 +318,11 @@ mod tests {
 fn compress_rvl(input: Vec<u16>) -> PyResult<Vec<u8>> {
     let mut codec = RVLCodec::new();
     let mut output = Vec::new();
-    codec
-        .compress_rvl_checked(&input, &mut output)
-        .map_err(|err| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("{err:?}")))?;
+    if let Err(err) = codec.compress_rvl_checked(&input, &mut output) {
+        return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
+            "{err:?}"
+        )));
+    }
     Ok(output)
 }
 
@@ -327,9 +330,11 @@ fn compress_rvl(input: Vec<u16>) -> PyResult<Vec<u8>> {
 fn decompress_rvl(input: Vec<u8>, num_pixels: usize) -> PyResult<Vec<u16>> {
     let mut codec = RVLCodec::new();
     let mut output = Vec::new();
-    codec
-        .decompress_rvl_checked(&input, &mut output, num_pixels)
-        .map_err(|err| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("{err:?}")))?;
+    if let Err(err) = codec.decompress_rvl_checked(&input, &mut output, num_pixels) {
+        return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
+            "{err:?}"
+        )));
+    }
     Ok(output)
 }
 
