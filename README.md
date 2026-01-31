@@ -137,6 +137,18 @@ cargo test
 python src/test_rvlcodec.py
 ```
 
+## Release Workflow
+
+Releases are handled by the `Release` GitHub Actions workflow.
+
+1. Update `Cargo.toml` version.
+2. Run the `Release` workflow with the same version (for example `0.1.0`).
+3. The workflow validates the version, creates a GitHub release, and uploads Python wheels + sdist, a `.crate` package, a source tarball, and SHA256 checksum files to the GitHub release.
+
+Required secrets:
+
+- `GITHUB_TOKEN` (provided by GitHub Actions) for attaching release assets
+
 ## Performance
 
 The Rust implementation provides excellent performance:

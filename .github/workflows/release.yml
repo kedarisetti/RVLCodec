@@ -12,6 +12,9 @@ on:
         required: false
         type: string
 
+permissions:
+  contents: write
+
 jobs:
   create-release:
     runs-on: ubuntu-latest
@@ -19,14 +22,37 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Verify version inputs
+        run: |
+          set -euo pipefail
+          VERSION="${{ github.event.inputs.version }}"
+          case "$VERSION" in
+            v*) echo "Version input must not start with 'v' (got $VERSION)"; exit 1 ;;
+          esac
+          python3 - <<'PY'
+          import sys, tomllib
+          version = "${{ github.event.inputs.version }}"
+          with open("Cargo.toml", "rb") as f:
+            cargo = tomllib.load(f)
+          cargo_version = cargo["package"]["version"]
+          if cargo_version != version:
+            sys.exit(f"Version mismatch: Cargo.toml has {cargo_version}, input is {version}")
+
+          with open("pyproject.toml", "rb") as f:
+            pyproject = tomllib.load(f)
+          dynamic = pyproject.get("project", {}).get("dynamic", [])
+          if "version" not in dynamic:
+            sys.exit("pyproject.toml must keep version dynamic for maturin publish")
+          PY
+
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ github.event.inputs.version }}
-          release_name: Release v${{ github.event.inputs.version }}
+          name: Release v${{ github.event.inputs.version }}
           body: |
             ## What's Changed
             
@@ -45,4 +71,82 @@ jobs:
             pip install rvlcodec==${{ github.event.inputs.version }}
             ```
           draft: false
-          prerelease: false 
+          prerelease: false
+
+  build-python-artifacts:
+    name: Build Python artifacts
+    runs-on: ubuntu-latest
+    needs: create-release
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install maturin
+        run: pip install maturin
+
+      - name: Build wheels and sdist
+        run: maturin build --release --sdist --manylinux 2014 -i python
+
+      - name: Generate checksums
+        run: |
+          set -euo pipefail
+          cd target/wheels
+          sha256sum * > rvlcodec-wheels-sha256-py${{ matrix.python-version }}.txt
+
+      - name: Upload artifacts to GitHub release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          files: |
+            target/wheels/*
+
+  build-rust-artifacts:
+    name: Build Rust artifacts
+    runs-on: ubuntu-latest
+    needs: create-release
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Package crate
+        run: cargo package --no-verify
+
+      - name: Create source tarball
+        run: |
+          git archive --format=tar.gz -o rvlcodec-${{ github.event.inputs.version }}.tar.gz HEAD
+
+      - name: Generate checksums
+        run: |
+          set -euo pipefail
+          sha256sum target/package/*.crate rvlcodec-${{ github.event.inputs.version }}.tar.gz > rvlcodec-rust-artifacts-sha256.txt
+
+      - name: Upload artifacts to GitHub release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          files: |
+            target/package/*.crate
+            rvlcodec-${{ github.event.inputs.version }}.tar.gz
+            rvlcodec-rust-artifacts-sha256.txt
