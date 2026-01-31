@@ -42,7 +42,11 @@ fn main() {
     let mut zeros_decompressed = Vec::new();
 
     let zeros_compressed_size = codec.compress_rvl(&zeros_input, &mut zeros_compressed);
-    codec.decompress_rvl(&zeros_compressed, &mut zeros_decompressed, zeros_input.len());
+    codec.decompress_rvl(
+        &zeros_compressed,
+        &mut zeros_decompressed,
+        zeros_input.len(),
+    );
 
     println!("All zeros compressed size: {} bytes", zeros_compressed_size);
     println!(
@@ -61,9 +65,16 @@ fn main() {
     let mut nonzeros_decompressed = Vec::new();
 
     let nonzeros_compressed_size = codec.compress_rvl(&nonzeros_input, &mut nonzeros_compressed);
-    codec.decompress_rvl(&nonzeros_compressed, &mut nonzeros_decompressed, nonzeros_input.len());
+    codec.decompress_rvl(
+        &nonzeros_compressed,
+        &mut nonzeros_decompressed,
+        nonzeros_input.len(),
+    );
 
-    println!("All non-zeros compressed size: {} bytes", nonzeros_compressed_size);
+    println!(
+        "All non-zeros compressed size: {} bytes",
+        nonzeros_compressed_size
+    );
     println!(
         "All non-zeros test: {}",
         if nonzeros_input == nonzeros_decompressed {
