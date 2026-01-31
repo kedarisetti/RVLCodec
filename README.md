@@ -137,6 +137,8 @@ cargo test
 python src/test_rvlcodec.py
 ```
 
+If your system Python is newer than PyO3 supports, set `PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1` before building.
+
 ## Release Workflow
 
 Releases are handled by the `Release` GitHub Actions workflow.
