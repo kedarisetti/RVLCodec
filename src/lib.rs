@@ -1,4 +1,5 @@
 //! RVL Codec - A Rust implementation of the RVL (Run-Length Variable-Length) codec
+#![cfg_attr(feature = "python", allow(clippy::useless_conversion))]
 //!
 //! This library provides lossless compression for depth image data using the RVL algorithm
 //! as described in "Fast Lossless Depth Image Compression" by Andrew D. Wilson.
