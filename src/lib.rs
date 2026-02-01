@@ -319,7 +319,7 @@ fn compress_rvl(input: Vec<u16>) -> PyResult<Vec<u8>> {
     let mut codec = RVLCodec::new();
     let mut output = Vec::new();
     if let Err(err) = codec.compress_rvl_checked(&input, &mut output) {
-        return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
+        return Err(pyo3::exceptions::PyValueError::new_err(format!(
             "{err:?}"
         )));
     }
@@ -331,7 +331,7 @@ fn decompress_rvl(input: Vec<u8>, num_pixels: usize) -> PyResult<Vec<u16>> {
     let mut codec = RVLCodec::new();
     let mut output = Vec::new();
     if let Err(err) = codec.decompress_rvl_checked(&input, &mut output, num_pixels) {
-        return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
+        return Err(pyo3::exceptions::PyValueError::new_err(format!(
             "{err:?}"
         )));
     }
