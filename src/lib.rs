@@ -23,6 +23,7 @@
 //! assert_eq!(input, decompressed);
 //! ```
 
+#[cfg(feature = "python")]
 use pyo3::prelude::*;
 
 /// RVL Codec for depth image compression
@@ -314,6 +315,7 @@ mod tests {
     }
 }
 
+#[cfg(feature = "python")]
 #[pyfunction]
 fn compress_rvl(input: Vec<u16>) -> PyResult<Vec<u8>> {
     let mut codec = RVLCodec::new();
@@ -324,6 +326,7 @@ fn compress_rvl(input: Vec<u16>) -> PyResult<Vec<u8>> {
     Ok(output)
 }
 
+#[cfg(feature = "python")]
 #[pyfunction]
 fn decompress_rvl(input: Vec<u8>, num_pixels: usize) -> PyResult<Vec<u16>> {
     let mut codec = RVLCodec::new();
@@ -334,6 +337,7 @@ fn decompress_rvl(input: Vec<u8>, num_pixels: usize) -> PyResult<Vec<u16>> {
     Ok(output)
 }
 
+#[cfg(feature = "python")]
 #[pymodule]
 fn rvlcodec(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(compress_rvl, m)?)?;

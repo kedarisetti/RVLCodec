@@ -83,7 +83,7 @@ jobs:
         key: ${{ runner.os }}-cargo-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
 
     - name: Build
-      run: cargo build --release --lib
+      run: cargo build --release --lib --no-default-features
 
   python-build:
     name: Build Python bindings

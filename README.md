@@ -74,6 +74,12 @@ fn main() {
 }
 ```
 
+By default, the crate builds without Python bindings. To enable the bindings in a Rust build, use:
+
+```bash
+cargo build --features python
+```
+
 ### Python
 
 ```python

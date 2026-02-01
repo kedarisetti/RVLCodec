@@ -23,4 +23,7 @@ dependencies = []
 [project.urls]
 Homepage = "https://github.com/kedarisetti/rvlcodec"
 Repository = "https://github.com/kedarisetti/rvlcodec"
-Documentation = "https://docs.rs/rvlcodec" 
+Documentation = "https://docs.rs/rvlcodec"
+
+[tool.maturin]
+features = ["python"]
