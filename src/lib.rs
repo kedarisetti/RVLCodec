@@ -317,6 +317,7 @@ mod tests {
 
 #[cfg(feature = "python")]
 #[pyfunction]
+#[allow(clippy::useless_conversion)]
 fn compress_rvl(input: Vec<u16>) -> PyResult<Vec<u8>> {
     let mut codec = RVLCodec::new();
     let mut output = Vec::new();
@@ -328,6 +329,7 @@ fn compress_rvl(input: Vec<u16>) -> PyResult<Vec<u8>> {
 
 #[cfg(feature = "python")]
 #[pyfunction]
+#[allow(clippy::useless_conversion)]
 fn decompress_rvl(input: Vec<u8>, num_pixels: usize) -> PyResult<Vec<u16>> {
     let mut codec = RVLCodec::new();
     let mut output = Vec::new();
